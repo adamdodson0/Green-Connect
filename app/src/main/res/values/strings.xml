@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">GridFun</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="toSecond">Play</string>
+    <string name="toFirst">Main Menu</string>
+
+    <!-- Strings used for first fragment -->
+    <string name="hello_first_fragment">Welcome to Connect Green!</string>
+
+    <!-- Strings used for second fragment -->
+    <string name="clicks_left">Clicks Left: %1$d</string>
+    <string name="clicks_left_tutorial">Clicks Left: 4</string>
+    <string name="level">Level: %1$d/10</string>
+
+    <!-- Strings used for third fragment -->
+    <string name="ending">Good Job!! You got\nto level: %1$d!!</string>
+    <string name="beatGame">Fantastic Job!! You beat\nthe game!!</string>
+    <string name="firstLevel">Keep trying!!\nYou can do this!!\n\nLevel: %1$d</string>
+
+    <!-- Strings used for descriptions -->
+    <string name="button_descriptions">These imageButtons change color when clicked
+        (effect button and buttons in 1 button radius)</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
