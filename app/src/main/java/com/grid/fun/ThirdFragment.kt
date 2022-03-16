@@ -40,9 +40,28 @@ class ThirdFragment : Fragment() {
         // Sets trophy to invisible
         binding.trophy.visibility = View.INVISIBLE
 
+        val bundle = Bundle()
+        bundle.putInt("lostGame", 0)
+
         binding.mainMenu.setOnClickListener {
             // Sends user data to next fragment (third)
-            findNavController().navigate(R.id.action_ThirdFragment_to_FirstFragment)
+            findNavController().navigate(R.id.action_ThirdFragment_to_FirstFragment, bundle)
+        }
+
+        if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
+            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
+        } else {
+            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
+        }
+
+        binding.muteUnmute.setOnClickListener {
+            if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
+                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
+                (activity as MainActivity).mediaPlayer?.pause()
+            } else {
+                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
+                (activity as MainActivity).mediaPlayer?.start()
+            }
         }
 
         // Check what level user got to (if 11 they won because level 10 is the last level)

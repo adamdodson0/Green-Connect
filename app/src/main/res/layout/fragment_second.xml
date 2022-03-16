@@ -11,6 +11,20 @@
     android:screenOrientation="portrait">
 
     <ImageButton
+        android:id="@+id/muteUnmute"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/unmute"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent=".18" />
+
+    <ImageButton
         android:id="@+id/imageButton13"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent=".17"
@@ -465,9 +479,9 @@
         android:layout_marginBottom="20dp"
         android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:3"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent=".12"
+        app:layout_constraintWidth_percent=".25"
         app:srcCompat="@drawable/hearts_3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

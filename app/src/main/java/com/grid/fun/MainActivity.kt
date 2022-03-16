@@ -1,21 +1,23 @@
 package com.grid.`fun`
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import com.grid.`fun`.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    var mediaPlayer: MediaPlayer? = null
+    var soundEffect1: MediaPlayer? = null
+    var soundEffect2: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,37 +26,54 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.main)
+        mediaPlayer!!.start()
+        mediaPlayer!!.isLooping = true
+
+        soundEffect1 = MediaPlayer.create(this, R.raw.click_sound)
+        soundEffect2 = MediaPlayer.create(this, R.raw.click_sound)
+
+        soundEffect1!!.setOnCompletionListener {
+            soundEffect1!!.release()
+        }
+
+        soundEffect2!!.setOnCompletionListener {
+            soundEffect2!!.release()
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        //setSupportActionBar(binding.toolbar)
-
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.menu_main, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        return when (item.itemId) {
-//            R.id.action_settings -> true
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
-//
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
-//    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun setUpAudio(context: Context, muteUnmute: ImageButton) {
+        if (mediaPlayer?.isPlaying == true) {
+            muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, context.theme))
+        } else {
+            muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, context.theme))
+        }
+
+        muteUnmute.setOnClickListener {
+            if (mediaPlayer?.isPlaying == true) {
+                muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, context.theme))
+                playSoundEffect(context, R.raw.click_button)
+                mediaPlayer?.pause()
+            } else {
+                muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, context.theme))
+                mediaPlayer?.start()
+                playSoundEffect(context, R.raw.click_button)
+            }
+        }
+    }
+
+    fun playSoundEffect(context: Context, soundEffect: Int) {
+        if (mediaPlayer?.isPlaying == true) {
+            if (soundEffect1?.isPlaying == true) {
+                soundEffect1!!.stop()
+                soundEffect1!!.release()
+            }
+            soundEffect1 = MediaPlayer.create(context, soundEffect)
+            soundEffect1!!.start()
+        }
+    }
 }

@@ -49,6 +49,24 @@ class FourthFragment : Fragment() {
         // Sets up the first levels image buttons, clicksLeft, and levelText
         //startNextLevel(bundle)
 
+        if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
+            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
+        } else {
+            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
+        }
+
+        binding.muteUnmute.setOnClickListener {
+            if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
+                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
+                (activity as MainActivity).mediaPlayer?.pause()
+            } else {
+                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
+                (activity as MainActivity).mediaPlayer?.start()
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
+            }
+        }
+
         // When user clicks glowing button, perform flip on buttons
         binding.glowingButton.setOnClickListener {
             binding.imageButton7.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
@@ -60,6 +78,7 @@ class FourthFragment : Fragment() {
             binding.imageButton18.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
             binding.imageButton19.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
             binding.glowingButton.visibility = View.INVISIBLE
+            (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_sound)
 
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.perfect, requireContext().theme))
@@ -69,6 +88,7 @@ class FourthFragment : Fragment() {
 
         binding.nextButton.setOnClickListener {
             if (nextNum == 0) {
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
                 binding.imageButton7.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
                 binding.imageButton8.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
                 binding.imageButton9.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
@@ -81,6 +101,7 @@ class FourthFragment : Fragment() {
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text3, requireContext().theme))
                 nextNum++
             } else if (nextNum == 1) {
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
                 nextNum++
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text4, requireContext().theme))
                 binding.imageButton1.visibility = View.INVISIBLE
@@ -111,6 +132,7 @@ class FourthFragment : Fragment() {
                 binding.clicksLeft.visibility = View.VISIBLE
             }
             else if (nextNum == 2) {
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
                 nextNum++
                 binding.clicksLeft.visibility = View.INVISIBLE
                 binding.hearts.visibility = View.VISIBLE
@@ -118,6 +140,7 @@ class FourthFragment : Fragment() {
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text5, requireContext().theme))
             }
             else if (nextNum == 3) {
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
                 nextNum++
                 binding.hearts.visibility = View.INVISIBLE
                 binding.gifImageView.visibility = View.VISIBLE
@@ -125,6 +148,7 @@ class FourthFragment : Fragment() {
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text6, requireContext().theme))
             }
             else if (nextNum == 4) {
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
                 nextNum++
 
                 findNavController().navigate(R.id.action_FourthFragment_to_FirstFragment, bundle)
