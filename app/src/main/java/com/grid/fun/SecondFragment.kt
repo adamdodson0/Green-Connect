@@ -99,11 +99,6 @@ class SecondFragment : Fragment(), View.OnClickListener {
         }
     }
 
-
-
-
-
-
     @SuppressLint("UseCompatLoadingForDrawables")
     fun submit(bundle: Bundle) {
         if (imageButtons.all {it.drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState}) {
@@ -206,6 +201,7 @@ class SecondFragment : Fragment(), View.OnClickListener {
             10 -> levels((1..5).random(), 6, 10)
             else -> {
                 bundle.putInt("level", level)
+                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.win)
                 findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment, bundle)
             }
         }

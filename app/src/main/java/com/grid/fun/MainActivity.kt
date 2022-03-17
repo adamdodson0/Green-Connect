@@ -67,7 +67,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun playSoundEffect(context: Context, soundEffect: Int) {
-        if (mediaPlayer?.isPlaying == true) {
+        if (soundEffect == R.raw.level_win) {
+            if (mediaPlayer?.isPlaying == true) {
+                if (soundEffect2?.isPlaying == true) {
+                    soundEffect2!!.stop()
+                    soundEffect2!!.release()
+                }
+                soundEffect2 = MediaPlayer.create(context, soundEffect)
+                soundEffect2!!.start()
+            }
+        } else if (mediaPlayer?.isPlaying == true) {
             if (soundEffect1?.isPlaying == true) {
                 soundEffect1!!.stop()
                 soundEffect1!!.release()

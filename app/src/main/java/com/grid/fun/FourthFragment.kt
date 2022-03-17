@@ -23,6 +23,8 @@ class FourthFragment : Fragment() {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
+    lateinit var imageButtons: List<ImageButton>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,37 +48,28 @@ class FourthFragment : Fragment() {
 
         var nextNum: Int = 0
 
+        val array = arrayOf(7, 8, 9, 12, 13, 14, 17, 18, 19)
+
+        // Creates listOf all 25 of the imageButtons in the center of the screen that make up the game
+        imageButtons = listOf(binding.imageButton1, binding.imageButton2, binding.imageButton3, binding.imageButton4,
+            binding.imageButton5, binding.imageButton6, binding.imageButton7, binding.imageButton8, binding.imageButton9,
+            binding.imageButton10, binding.imageButton11, binding.imageButton12, binding.imageButton13,
+            binding.imageButton14, binding.imageButton15, binding.imageButton16, binding.imageButton17,
+            binding.imageButton18, binding.imageButton19, binding.imageButton20, binding.imageButton21,
+            binding.imageButton22, binding.imageButton23, binding.imageButton24, binding.imageButton25)
+
         // Sets up the first levels image buttons, clicksLeft, and levelText
         //startNextLevel(bundle)
 
-        if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
-            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
-        } else {
-            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
-        }
-
-        binding.muteUnmute.setOnClickListener {
-            if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
-                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                (activity as MainActivity).mediaPlayer?.pause()
-            } else {
-                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
-                (activity as MainActivity).mediaPlayer?.start()
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-            }
-        }
+        // Sets up the audio for the second fragment
+        (activity as MainActivity).setUpAudio(requireContext(), binding.muteUnmute)
 
         // When user clicks glowing button, perform flip on buttons
         binding.glowingButton.setOnClickListener {
-            binding.imageButton7.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton8.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton9.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton12.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton14.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton17.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton18.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            binding.imageButton19.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
+
+            array.forEach() {
+                imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
+            }
             binding.glowingButton.visibility = View.INVISIBLE
             (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_sound)
 
@@ -89,46 +82,20 @@ class FourthFragment : Fragment() {
         binding.nextButton.setOnClickListener {
             if (nextNum == 0) {
                 (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                binding.imageButton7.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton8.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton9.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton12.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton13.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton14.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton17.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton18.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
-                binding.imageButton19.setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
+
+                array.forEach() {
+                    imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
+                }
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text3, requireContext().theme))
                 nextNum++
             } else if (nextNum == 1) {
                 (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
                 nextNum++
                 binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text4, requireContext().theme))
-                binding.imageButton1.visibility = View.INVISIBLE
-                binding.imageButton2.visibility = View.INVISIBLE
-                binding.imageButton3.visibility = View.INVISIBLE
-                binding.imageButton4.visibility = View.INVISIBLE
-                binding.imageButton5.visibility = View.INVISIBLE
-                binding.imageButton6.visibility = View.INVISIBLE
-                binding.imageButton7.visibility = View.INVISIBLE
-                binding.imageButton8.visibility = View.INVISIBLE
-                binding.imageButton9.visibility = View.INVISIBLE
-                binding.imageButton10.visibility = View.INVISIBLE
-                binding.imageButton11.visibility = View.INVISIBLE
-                binding.imageButton12.visibility = View.INVISIBLE
-                binding.imageButton13.visibility = View.INVISIBLE
-                binding.imageButton14.visibility = View.INVISIBLE
-                binding.imageButton15.visibility = View.INVISIBLE
-                binding.imageButton16.visibility = View.INVISIBLE
-                binding.imageButton17.visibility = View.INVISIBLE
-                binding.imageButton18.visibility = View.INVISIBLE
-                binding.imageButton19.visibility = View.INVISIBLE
-                binding.imageButton20.visibility = View.INVISIBLE
-                binding.imageButton21.visibility = View.INVISIBLE
-                binding.imageButton22.visibility = View.INVISIBLE
-                binding.imageButton23.visibility = View.INVISIBLE
-                binding.imageButton24.visibility = View.INVISIBLE
-                binding.imageButton25.visibility = View.INVISIBLE
+
+                imageButtons.forEach() {
+                    it.visibility = View.INVISIBLE
+                }
                 binding.clicksLeft.visibility = View.VISIBLE
             }
             else if (nextNum == 2) {
