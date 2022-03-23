@@ -1,18 +1,19 @@
 package com.grid.`fun`
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
-import android.media.MediaPlayer
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.grid.`fun`.databinding.FragmentSecondBinding
+
 
 /**
  * This class is the game fragment. The game consists of 25 image buttons centered in a grid,
@@ -70,12 +71,13 @@ class SecondFragment : Fragment(), View.OnClickListener {
             binding.imageButton18, binding.imageButton19, binding.imageButton20, binding.imageButton21,
             binding.imageButton22, binding.imageButton23, binding.imageButton24, binding.imageButton25)
 
-        // Grabs bundle from first fragment to check if player has beaten the game
-        var beatGame: Int? = arguments?.getInt("beatGame")
-        // Set trophy to visible to show user beat the game before
-        if (beatGame == 1) {
+        if (SavePreference(requireContext()).getInteger("beatGame") == 1) {
             binding.trophy.visibility = View.VISIBLE
         }
+
+
+
+
 
         // Sets up the first levels image buttons, clicksLeft, and levelText
         startNextLevel(bundle, false)
@@ -101,7 +103,11 @@ class SecondFragment : Fragment(), View.OnClickListener {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     fun submit(bundle: Bundle) {
-        if (imageButtons.all {it.drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState}) {
+//        if (imageButtons.all {it.drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState}) {
+//            // Next level is initiated (in same fragment)
+//            (activity as MainActivity).playSoundEffect(requireContext(), R.raw.level_win)
+//            startNextLevel(bundle, false)
+        if (true) {
             // Next level is initiated (in same fragment)
             (activity as MainActivity).playSoundEffect(requireContext(), R.raw.level_win)
             startNextLevel(bundle, false)
@@ -122,27 +128,6 @@ class SecondFragment : Fragment(), View.OnClickListener {
                     binding.hearts.setImageDrawable(resources.getDrawable(R.drawable.hearts_2, requireContext().theme))
                     startNextLevel(bundle, true)
                 }
-            }
-        }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    fun setUpAudio() {
-        if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
-            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
-        } else {
-            binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
-        }
-
-        binding.muteUnmute.setOnClickListener {
-            if ((activity as MainActivity).mediaPlayer?.isPlaying == true) {
-                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.mute, requireContext().theme))
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                (activity as MainActivity).mediaPlayer?.pause()
-            } else {
-                binding.muteUnmute.setImageDrawable(resources.getDrawable(R.drawable.unmute, requireContext().theme))
-                (activity as MainActivity).mediaPlayer?.start()
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
             }
         }
     }
@@ -184,7 +169,8 @@ class SecondFragment : Fragment(), View.OnClickListener {
     fun startNextLevel(bundle: Bundle, restart: Boolean) {
         if (!restart) {
             level += 1
-            binding.levelText.text = getString(R.string.level, level)
+            if (level != 11)
+                binding.levelText.text = getString(R.string.level, level)
         } else {
             resetGrid()
         } // Do nothing

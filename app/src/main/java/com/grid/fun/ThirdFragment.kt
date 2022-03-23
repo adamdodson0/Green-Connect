@@ -24,10 +24,8 @@ class ThirdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentThirdBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -70,12 +68,13 @@ class ThirdFragment : Fragment() {
             11 -> { // Display text for beating game. Beating game sends bundle to next
                 // fragment to show trophy for user next time game is played
                 // Sets trophy to visible
+                if (SavePreference(requireContext()).getInteger("beatGame") != 1) {
+                    SavePreference(requireContext()).saveInt("beatGame", 1)
+                }
                 binding.trophy.visibility = View.VISIBLE
                 binding.levelText.setImageDrawable(resources.getDrawable(R.drawable.level11, requireContext().theme))
                 binding.gifImageView.visibility = View.INVISIBLE
                 binding.mainMenu.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putInt("beatGame", 1)
                     findNavController().navigate(R.id.action_ThirdFragment_to_FirstFragment, bundle)
                 }
             }
