@@ -9,16 +9,24 @@ import androidx.appcompat.app.AppCompatActivity
 import com.grid.`fun`.databinding.ActivityMainBinding
 
 /**
+ * Main Activity class for all four fragments in the navigation. This class sets up
+ * the mediaPlayers that the Fragments use. There are three mediaPlayers, mediaPlayer,
+ * soundEffect1, and soundEffect2. mediaPlayer is used for the main soundtrack of the
+ * app. soundEffect1 is used for the clicking sound effects. soundEffect2 is used for
+ * the level win sounds (after a user beats a level).
  *
+ * @author Adam Dodson
+ * @version 1.1.0
+ * @since 23-03-2022
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     // Creates 3 mediaPlayers, All holding differing functions
-    var mediaPlayer: MediaPlayer? = null
-    var soundEffect1: MediaPlayer? = null
-    var soundEffect2: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private var soundEffect1: MediaPlayer? = null
+    private var soundEffect2: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,5 +118,10 @@ class MainActivity : AppCompatActivity() {
                 soundEffect1!!.start()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        // code here to show dialog
+        super.onBackPressed() // optional depending on your needs
     }
 }

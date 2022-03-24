@@ -12,7 +12,14 @@ import androidx.navigation.fragment.findNavController
 import com.grid.`fun`.databinding.FragmentFirstBinding
 
 /**
- * A simple [Fragment] subclass as the default destination in the navigation.
+ * First Fragment the user lands on when application opens. User is shown a logo for two
+ * seconds. Then there is title screen with three clickable imageButtons. One that takes
+ * you to the main game, another that takes you to the tutorial, and the mute and unmute
+ * button. The mute/unmute button is in every fragment.
+ *
+ * @author Adam Dodson
+ * @version 1.1.0
+ * @since 23-03-2022
  */
 class FirstFragment : Fragment() {
 
@@ -22,7 +29,7 @@ class FirstFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                              container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
     }

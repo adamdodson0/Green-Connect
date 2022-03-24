@@ -10,14 +10,20 @@ import androidx.navigation.fragment.findNavController
 import com.grid.`fun`.databinding.FragmentThirdBinding
 
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * This Fragment is where the user goes when winning or losing the game in the
+ * SecondFragment. Depending on what level the user got to different drawables
+ * will be displayed to the user. Although there will be only one imageButton
+ * that will take the user back to the FirstFragment.
+ *
+ * @author Adam Dodson
+ * @version 1.1.0
+ * @since 23-03-2022
  */
 class ThirdFragment : Fragment() {
 
     private var _binding: FragmentThirdBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -32,28 +38,29 @@ class ThirdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Receive level value from second fragment and set text to appropriate level int
-        var level: Int? = arguments?.getInt("level")
+        // Receive level value from second fragments bundle
+        val level: Int? = arguments?.getInt("level")
 
-        // Sets trophy to invisible
-        binding.trophy.visibility = View.INVISIBLE
-
+        // Create bundle to send to FirstFragment to stop logo from appearing
         val bundle = Bundle()
-        bundle.putInt("lostGame", 0)
 
+        // Sets main menu button to send user to FirstFragment when clicked (with
+        // bundle data) Also plays sound effect.
         binding.mainMenu.setOnClickListener {
             // Sends user data to next fragment (third)
             findNavController().navigate(R.id.action_ThirdFragment_to_FirstFragment, bundle)
             (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
         }
 
-        // Sets up audio, sets mute button click listener
+        // Sets up audio, sets the mute button's clickListener
         (activity as MainActivity).setUpAudio(requireContext(), binding.muteUnmute)
 
-        // Check what level user got to (if 11 they won because level 10 is the last level)
-        // Set appropriate image resource for level gotten to. If user beat game,
-        // Set bundle into navigator for trophy, and make trophy visibile, and make
-        // cube invisible
+        /**
+         * Checks what level the user got to. If they got to 1-10 (inclusive) then it just
+         * sets which imageDrawable they will get. If they got to 11 (they beat all the levels)
+         * then it will save to sharedPreference (whats used to make trophy appear in SecondFragment).
+         * A trophy will also appear and the gif will be invisible.
+         */
         when (level) {
             1 -> binding.levelText.setImageDrawable(resources.getDrawable(R.drawable.level1, requireContext().theme))
             2 -> binding.levelText.setImageDrawable(resources.getDrawable(R.drawable.level2, requireContext().theme))
@@ -74,9 +81,6 @@ class ThirdFragment : Fragment() {
                 binding.trophy.visibility = View.VISIBLE
                 binding.levelText.setImageDrawable(resources.getDrawable(R.drawable.level11, requireContext().theme))
                 binding.gifImageView.visibility = View.INVISIBLE
-                binding.mainMenu.setOnClickListener {
-                    findNavController().navigate(R.id.action_ThirdFragment_to_FirstFragment, bundle)
-                }
             }
         }
     }

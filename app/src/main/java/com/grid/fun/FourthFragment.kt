@@ -2,18 +2,23 @@ package com.grid.`fun`
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.grid.`fun`.databinding.FragmentFourthBinding
 
 /**
+ * This Fragment is the tutorial section to teach the user how to play the game. It is comprised
+ * of imageButtons replicating the main game, imageViews teaching the user, and a 'next'
+ * imageButton for the user to click to go on to the next part of the tutorial. The last click on
+ * the 'next' button will send them back to FirstFragment (the main menu).
  *
+ * @author Adam Dodson
+ * @version 1.1.0
+ * @since 23-03-2022
  */
 class FourthFragment : Fragment() {
 
@@ -23,16 +28,12 @@ class FourthFragment : Fragment() {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
-    lateinit var imageButtons: List<ImageButton>
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentFourthBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     /**
@@ -43,99 +44,75 @@ class FourthFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Sends user data to next fragment (third)
+        // Create bundle to send to FirstFragment to stop logo from appearing
         val bundle = Bundle()
-
-        var nextNum: Int = 0
-
+        // Will hold where user is at in tutorial
+        var nextNum = 0
+        // Holds the Integers for the imageButtons that have to be flipped
         val array = arrayOf(7, 8, 9, 12, 13, 14, 17, 18, 19)
 
         // Creates listOf all 25 of the imageButtons in the center of the screen that make up the game
-        imageButtons = listOf(binding.imageButton1, binding.imageButton2, binding.imageButton3, binding.imageButton4,
+        val imageButtons: List<ImageButton> = listOf(binding.imageButton1, binding.imageButton2, binding.imageButton3, binding.imageButton4,
             binding.imageButton5, binding.imageButton6, binding.imageButton7, binding.imageButton8, binding.imageButton9,
             binding.imageButton10, binding.imageButton11, binding.imageButton12, binding.imageButton13,
             binding.imageButton14, binding.imageButton15, binding.imageButton16, binding.imageButton17,
             binding.imageButton18, binding.imageButton19, binding.imageButton20, binding.imageButton21,
             binding.imageButton22, binding.imageButton23, binding.imageButton24, binding.imageButton25)
 
-        // Sets up the first levels image buttons, clicksLeft, and levelText
-        //startNextLevel(bundle)
-
         // Sets up the audio for the second fragment
         (activity as MainActivity).setUpAudio(requireContext(), binding.muteUnmute)
 
-        // When user clicks glowing button, perform flip on buttons
+        /**
+         * When user clicks glowingButton, perform flip on each button in array. Play sound effect,
+         * then set visibilities and Drawable for user information.
+         */
         binding.glowingButton.setOnClickListener {
-
-            array.forEach() {
+            // Sets all imageButtons in array to Drawable square2
+            array.forEach {
                 imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            }
-            binding.glowingButton.visibility = View.INVISIBLE
+            } // Plays sound effect and sets visibilities for tutorial continuation
             (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_sound)
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.perfect, requireContext().theme))
-                binding.nextButton.visibility = View.VISIBLE
-            }, 500)
+            binding.glowingButton.visibility = View.INVISIBLE
+            binding.nextButton.visibility = View.VISIBLE
+            binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.perfect, requireContext().theme))
         }
 
+        /**
+         * This next button is clicked continually by the user going through the tutorial,
+         * each click will give nextNum++ to have a 'when' statement for correct actions
+         * to occur. On the last click (5th click) it will send the user to FirstFragment as
+         * the tutorial has been completed.
+         */
         binding.nextButton.setOnClickListener {
-            if (nextNum == 0) {
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-
-                array.forEach() {
-                    imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
+            when (nextNum) {
+                0 -> { // Sets all imageButtons in array Drawable to glowsquare
+                    array.forEach {
+                        imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.glowsquare, requireContext().theme))
+                    } // Sets Drawable for tutorial continuation
+                    binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text3, requireContext().theme))
                 }
-                binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text3, requireContext().theme))
-                nextNum++
-            } else if (nextNum == 1) {
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                nextNum++
-                binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text4, requireContext().theme))
-
-                imageButtons.forEach() {
-                    it.visibility = View.INVISIBLE
+                1 -> { // Sets every imageButton in imageButtons to be invisible
+                    imageButtons.forEach {
+                        it.visibility = View.INVISIBLE
+                    } // Sets visibility and Drawable for tutorial continuation
+                    binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text4, requireContext().theme))
+                    binding.clicksLeft.visibility = View.VISIBLE
                 }
-                binding.clicksLeft.visibility = View.VISIBLE
+                2 -> { // Sets visibility and Drawable for tutorial continuation
+                    binding.clicksLeft.visibility = View.INVISIBLE
+                    binding.hearts.visibility = View.VISIBLE
+                    binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text5, requireContext().theme))
+                }
+                3 -> { // Sets visibility and Drawable for tutorial continuation
+                    binding.hearts.visibility = View.INVISIBLE
+                    binding.gifImageView.visibility = View.VISIBLE
+                    binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text6, requireContext().theme))
+                } // Takes user back to FirstFragment (main menu)
+                4 -> findNavController().navigate(R.id.action_FourthFragment_to_FirstFragment, bundle)
             }
-            else if (nextNum == 2) {
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                nextNum++
-                binding.clicksLeft.visibility = View.INVISIBLE
-                binding.hearts.visibility = View.VISIBLE
-
-                binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text5, requireContext().theme))
-            }
-            else if (nextNum == 3) {
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                nextNum++
-                binding.hearts.visibility = View.INVISIBLE
-                binding.gifImageView.visibility = View.VISIBLE
-
-                binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text6, requireContext().theme))
-            }
-            else if (nextNum == 4) {
-                (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
-                nextNum++
-
-                findNavController().navigate(R.id.action_FourthFragment_to_FirstFragment, bundle)
-                //binding.textTutorial.setImageDrawable(resources.getDrawable(R.drawable.tutorial_text7, requireContext().theme))
-            }
-        }
-    }
-
-    /**
-     * This function checks the imageButtons drawable image and changes it to the opposite
-     * image for the puzzle board.
-     */
-    @SuppressLint("UseCompatLoadingForDrawables")
-    fun flipOver(imageButton: ImageButton) {
-        // Check if Drawable is square1 or square2, and changing it to the opposite
-        if (imageButton.drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState) {
-            imageButton.setImageDrawable(resources.getDrawable(R.drawable.square1, requireContext().theme))
-        }
-        else {
-            imageButton.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
+            // Adds 1 to nextNum and plays click sound effect
+            nextNum++
+            (activity as MainActivity).playSoundEffect(requireContext(), R.raw.click_button)
         }
     }
 

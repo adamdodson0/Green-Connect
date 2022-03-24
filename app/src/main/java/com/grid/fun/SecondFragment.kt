@@ -1,11 +1,9 @@
 package com.grid.`fun`
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.grid.`fun`.databinding.FragmentSecondBinding
-
 
 /**
  * This class is the game fragment. The game consists of 25 image buttons centered in a grid,
@@ -24,17 +21,21 @@ import com.grid.`fun`.databinding.FragmentSecondBinding
  * either win or lose. There is also a text view explaining how many clicks the user has to get the
  * image buttons matching. If they fail to match the image buttons with the correct amount of clicks,
  * it takes them to the next fragment (third).
+ *
+ * @author Adam Dodson
+ * @version 1.1.0
+ * @since 23-03-2022
  */
 class SecondFragment : Fragment(), View.OnClickListener {
 
     // Holds the amount of clicks left, displayed on screen in textView
-    var clicksLeft: Int = 0
+    private var clicksLeft: Int = 0
     // Holds the level number, displayed on screen in TextView
-    var level: Int = 0
+    private var level: Int = 0
     // Holds the number of hearts/lives left, displayed on screen in imageView
-    var heartsNum: Int = 3
+    private var heartsNum: Int = 3
     // Holds all 25 imageButtons for the board to be played on
-    lateinit var imageButtons: List<ImageButton>
+    private lateinit var imageButtons: List<ImageButton>
     // Variable holds binding
     private var _binding: FragmentSecondBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
@@ -71,13 +72,10 @@ class SecondFragment : Fragment(), View.OnClickListener {
             binding.imageButton18, binding.imageButton19, binding.imageButton20, binding.imageButton21,
             binding.imageButton22, binding.imageButton23, binding.imageButton24, binding.imageButton25)
 
+        // Checks sharedPreference for if user beat the game and makes trophy visible if so.
         if (SavePreference(requireContext()).getInteger("beatGame") == 1) {
             binding.trophy.visibility = View.VISIBLE
         }
-
-
-
-
 
         // Sets up the first levels image buttons, clicksLeft, and levelText
         startNextLevel(bundle, false)
@@ -96,35 +94,38 @@ class SecondFragment : Fragment(), View.OnClickListener {
          * When button is clicked, the button and the buttons around (effect within 1 button radius)
          * it all change image.
          */
-        imageButtons.forEach() {
+        imageButtons.forEach {
             it.setOnClickListener(this)
         }
     }
 
+    /**
+     * Function called when user clicks submit button or clicks falls to 0. Checks if user has
+     * completed the puzzle for the level, if so, next level will start. If they did not, they
+     * will lose a heart.
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     fun submit(bundle: Bundle) {
-//        if (imageButtons.all {it.drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState}) {
-//            // Next level is initiated (in same fragment)
-//            (activity as MainActivity).playSoundEffect(requireContext(), R.raw.level_win)
-//            startNextLevel(bundle, false)
-        if (true) {
+        // Checks if user has flipped all squared to square2 (green)
+        if (imageButtons.all {it.drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState}) {
             // Next level is initiated (in same fragment)
             (activity as MainActivity).playSoundEffect(requireContext(), R.raw.level_win)
             startNextLevel(bundle, false)
+//        if (true) {
+//            // Next level is initiated (in same fragment)
+//            (activity as MainActivity).playSoundEffect(requireContext(), R.raw.level_win)
+//            startNextLevel(bundle, false)
         } else { // User lost the game, sent to next fragment (third)
-            heartsNum -= 1
+            heartsNum -= 1 // Subtract one heart
             (activity as MainActivity).playSoundEffect(requireContext(), R.raw.damage)
             when (heartsNum) {
-                0 -> {
+                0 -> { // Sends user to lose screen with data on the level beaten
                     bundle.putInt("level", level)
-                    binding.submitButton.visibility = View.INVISIBLE
                     findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment, bundle)
-                }
-                1 -> {
+                } 1 -> { // Restarts the level and takes away 1 heart in Drawable
                     binding.hearts.setImageDrawable(resources.getDrawable(R.drawable.hearts_1, requireContext().theme))
                     startNextLevel(bundle, true)
-                }
-                2 -> {
+                } 2 -> { // Restarts the level and takes away 1 heart in Drawable
                     binding.hearts.setImageDrawable(resources.getDrawable(R.drawable.hearts_2, requireContext().theme))
                     startNextLevel(bundle, true)
                 }
@@ -134,17 +135,22 @@ class SecondFragment : Fragment(), View.OnClickListener {
 
     /**
      * This function checks the imageButtons drawable image and changes it to the opposite
-     * image for the puzzle board.
+     * image for the puzzle board. This function is called the most as it is the main
+     * function of the application. It takes the imageButtons list, an array, and a boolean.
+     * The imageButton list is used to access each imageButton quickly and flip the correct ones.
+     * The array is used to determine which imageButton to flip inside the list of imageButtons.
+     * The boolean is used to tell if the board is being set up for the next level or not.
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     fun flipOver(imageButtons: List<ImageButton>, array: IntArray, settingUp: Boolean) {
-        array.forEach {
+        array.forEach { // Flips imageButton Drawable to opposite, either square1 or square2
             if (imageButtons[it - 1].drawable.constantState == resources.getDrawable(R.drawable.square2, requireContext().theme).constantState) {
                 imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.square1, requireContext().theme))
-            } else {
+            } else
                 imageButtons[it - 1].setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
-            }
-        }
+        } // Checks if setting up board for next level
+        // Subtract click, update click text, check if clicks are left is zero,
+        // If so, makes buttons unclickable and performs click on sumbit button
         if (!settingUp) {
             clicksLeft -= 1
             if (clicksLeft >= 0)
@@ -163,17 +169,21 @@ class SecondFragment : Fragment(), View.OnClickListener {
 
     /**
      * This function increases the level count by 1, changes the click amount to the value for
-     * the appropriate level, and turns the button resources to the correct values.
+     * the appropriate level, and turns the button resources to the correct values for the next level.
+     * It takes a bundle and a boolean. The bundle is used to send the level data to the next
+     * fragment and the boolean is to tell if the level is being restarted or not.
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     fun startNextLevel(bundle: Bundle, restart: Boolean) {
-        if (!restart) {
+        // Check if level is being restarted
+        if (!restart) { // Update level amount
             level += 1
             if (level != 11)
                 binding.levelText.text = getString(R.string.level, level)
-        } else {
+        } else // Reset the grid for the same level.
             resetGrid()
-        } // Do nothing
+        // Call levels function for updating the next level, if past level 10 send user to
+        // the next fragment, ThirdFragment, the win/lose screen.
         when (level) {
             1 -> levels((1..5).random(), 4, 1)
             2 -> levels((1..5).random(), 4, 2)
@@ -193,7 +203,12 @@ class SecondFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    fun levels(random: Int, clicks: Int, levelNumber: Int) {
+    /**
+     * This function helps set up all of the levels in the game. It is given 3 Ints. Random, clicks,
+     * and levelNumber. random picks the level to get from 5 on a certain level. clicks holds the
+     * amount of clicks you get for the level. levelNumber holds what level the user is at.
+     */
+    private fun levels(random: Int, clicks: Int, levelNumber: Int) {
         when (levelNumber) {
             1 -> {
                 when (random) {
@@ -285,16 +300,17 @@ class SecondFragment : Fragment(), View.OnClickListener {
                     5 -> flipOver(imageButtons, intArrayOf(1, 3, 4, 8, 14, 15, 17, 18, 20, 21, 22, 23, 24, 25), true)
                 }
             }
-        }
+        } // Update clicksLeft text for user
         clicksLeft = clicks
         binding.clicksLeft.text = getString(R.string.clicks_left, clicksLeft)
     }
 
     /**
-     *
+     * This function sets all of the imageButtons in the imageButtons list to either clickable or
+     * not clickable.
      */
     private fun clickable(clickable: Boolean) {
-        imageButtons.forEach() {
+        imageButtons.forEach {
             it.isClickable = clickable
         }
     }
@@ -305,7 +321,7 @@ class SecondFragment : Fragment(), View.OnClickListener {
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun resetGrid() {
-        imageButtons.forEach() {
+        imageButtons.forEach {
             it.setImageDrawable(resources.getDrawable(R.drawable.square2, requireContext().theme))
         }
     }
@@ -315,6 +331,12 @@ class SecondFragment : Fragment(), View.OnClickListener {
         _binding = null
     }
 
+    /**
+     * This function sets all of the onClickListener events for every imageButton on the board.
+     * When a user clicks an imageButton, flipOver is called to flip over all of the image buttons
+     * around the imageButton that is clicked (including the imageButton that is clicked). Also
+     * plays a sound effect when the user clicks.
+     */
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.imageButton1 -> flipOver(imageButtons, intArrayOf(1, 2, 6, 7), false)
