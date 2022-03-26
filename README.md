@@ -1,4 +1,4 @@
-# Mobile Game - Green Connect - Currently on Google PlayStore:
+># Mobile Game - Green Connect - Currently on Google PlayStore:
 https://play.google.com/store/apps/details?id=com.grid.fun
 
 ## Layout
