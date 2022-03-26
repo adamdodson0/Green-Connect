@@ -9,6 +9,7 @@ https://play.google.com/store/apps/details?id=com.grid.fun
 #### ✪Fragment 4: Tutorial Screen
 
 #### Picture:
+![nav](./Green-Connect/Images/nav.png)
 
 ## Features in Development:
 ### ✪Integration with AdMob to show ads.
